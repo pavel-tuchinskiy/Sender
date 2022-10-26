@@ -2,6 +2,7 @@
 using Domain.Models.Configuration;
 using Domain.Models.Message;
 using Domain.Models.MessageTemplates;
+using Domain.Models.Response;
 using Domain.Models.Rules.EffectModels;
 using Microsoft.Extensions.Configuration;
 using Service.Helpers;
@@ -28,6 +29,11 @@ namespace Service.Services
             var smtpEffect = effects.FirstOrDefault(x => x.Type == ChannelType.SMTP);
             var telegramEffect = effects.FirstOrDefault(x => x.Type == ChannelType.Telegram);
 
+            if(smtpEffect == null || telegramEffect == null)
+            {
+                throw new ResponseException("Can't find required effects");
+            }
+
             var smtpPlaceholders = smtpEffect.Placeholders.Select(x => x.Key).ToList();
             var telegramPlaceholders = telegramEffect.Placeholders.Select(x => x.Key).ToList();
 
@@ -38,6 +44,11 @@ namespace Service.Services
             {
                 var smtpTemplate = templates.SmtpTemplates.FirstOrDefault(x => x.Id == smtpEffect.TemplateId);
                 var telegramTemplate = templates.TelegramTemplates.FirstOrDefault(x => x.Id == telegramEffect.TemplateId);
+
+                if(smtpTemplate == null || telegramTemplate == null)
+                {
+                    throw new ResponseException("Can't find required templates");
+                }
 
                 var smtpMessage = MessageHelper.CreateMessage<SmtpMessage, T, SmtpTemplate>(smtpTemplate, obj, smtpPlaceholders);
                 var telegramMessage = MessageHelper.CreateMessage<TelegramMessage, T, TelegramTemplate>(telegramTemplate, obj, telegramPlaceholders);

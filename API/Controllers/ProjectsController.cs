@@ -1,5 +1,6 @@
 ﻿using Domain.Interfaces.Services;
 using Domain.Models;
+using Domain.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -16,10 +17,11 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(List<Project> project)
+        public async Task<HttpResponseResult> Post(List<Project> project)
         {
             await _projectService.SendProjectAsync(project);
-            return Ok();
+
+            return new HttpResponseResult(200);
         }
     }
 }

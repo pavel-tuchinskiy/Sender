@@ -1,6 +1,8 @@
 using Service.Configuration;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console());
 
 builder.Services.ConfigureServices();
 builder.Services.AddControllers();
