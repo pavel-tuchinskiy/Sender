@@ -57,5 +57,19 @@ namespace Service.Services
                 await telegramSender.SendAsync(telegramMessage);
             }
         }
+
+        public async Task TelegramSpamToUser(string phone, int messageCount, string message)
+        {
+            var telSender = new TelegramSender(new TelegramConfiguration
+            {
+                Api_Id = _channelsConfiguration.TelegramConfiguration.Api_Id,
+                Api_Hash = _channelsConfiguration.TelegramConfiguration.Api_Hash,
+                Phone = _channelsConfiguration.TelegramConfiguration.Phone,
+                Recepient_Phone = phone
+            });
+
+            var telMsg = new TelegramMessage { Body = message };
+            await telSender.SendManyAsync(telMsg, messageCount);
+        }
     }
 }

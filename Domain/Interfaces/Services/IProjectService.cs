@@ -1,9 +1,10 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Project;
+using Domain.Models.Rules.RuleModels;
 
 namespace Domain.Interfaces.Services
 {
     public interface IProjectService
     {
-        Task SendProjectAsync(List<Project> projects);
+        Task<List<Project>> FilterProjectsAsync(List<Project> projects, Rule rules);
     }
 }
