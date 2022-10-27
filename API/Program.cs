@@ -1,5 +1,6 @@
 using Service.Configuration;
 using Serilog;
+using Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console());
@@ -20,7 +21,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.MapControllers();
 
 app.Run();
