@@ -1,14 +1,18 @@
 ﻿using Domain.Models.Response;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Service.Helpers
 {
-    public static class JsonParser
+    public class JsonParser
     {
-        public static T DeserializeFile<T>(string filePath)
+        public JsonParser(){}
+
+        public T DeserializeFile<T>(string filePath)
         {
             if (!File.Exists(filePath))
             {
+                Log.Error("Can't find file: {filePath}", filePath);
                 throw new ResponseException("Can't find requested file");
             }
 

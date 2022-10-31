@@ -27,7 +27,7 @@ namespace API.Controllers
 
             foreach(var rule in rules)
             {
-                var filteredProjects = await _projectService.FilterProjectsAsync(projects.Projects, rule);
+                var filteredProjects = _projectService.FilterProjects(projects.Projects, rule);
                 await _senderService.SendRangeAsync(filteredProjects, rule.Effects);
             } 
 

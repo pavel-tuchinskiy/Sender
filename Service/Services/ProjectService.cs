@@ -1,6 +1,8 @@
 ﻿using Domain.Interfaces.Services;
 using Domain.Models.Project;
 using Domain.Models.Rules.RuleModels;
+using Newtonsoft.Json;
+using Serilog;
 using Service.Extensions;
 
 namespace Service.Services
@@ -9,10 +11,12 @@ namespace Service.Services
     {
         public ProjectService() {}
 
-        public async Task<List<Project>> FilterProjectsAsync(List<Project> projects, Rule rule)
+        public List<Project> FilterProjects(List<Project> projects, Rule rule)
         {
-            var filteredProjects = await Task.Run(() => projects.AsQueryable().Filter(rule).ToList());
+            Log.Information("Filtering projects started");
+            var filteredProjects = projects.AsQueryable().Filter(rule).ToList();
 
+            Log.Information("Filtering projects complited. Result: {projects}", JsonConvert.SerializeObject(filteredProjects));
             return filteredProjects;
         }
     }

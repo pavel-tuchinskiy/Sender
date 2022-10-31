@@ -1,22 +1,24 @@
-﻿using System.Text.RegularExpressions;
+﻿using Serilog;
+using System.Text.RegularExpressions;
 
 namespace Service.Helpers
 {
     public static class MessageHelper
     {
-        public static string ReplacePlaceholder(string text, string placeholder, string value)
+        private static string ReplacePlaceholder(string text, string placeholder, string value)
         {
             var pattern = $"%{placeholder}%";
+            Log.Information("Replacing placeholder({placeholder}) in: {text}", placeholder, text);
             text = Regex.Replace(text, pattern, value);
             return text;
         }
 
-        public static bool ContainsPlaceholder(string text, string value)
+        private static bool ContainsPlaceholder(string text, string value)
         {
             return text.Contains($"%{value}%");
         }
 
-        public static string CreateMessageValue<T>(string template, T valueObj, List<string> placeholders)
+        private static string CreateMessageValue<T>(string template, T valueObj, List<string> placeholders)
         {
             var props = typeof(T).GetProperties();
             var message = template;

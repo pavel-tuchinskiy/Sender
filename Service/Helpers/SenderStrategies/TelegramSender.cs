@@ -1,10 +1,12 @@
-﻿using Domain.Models.Configuration;
+﻿using Domain.Interfaces.Helpers;
+using Domain.Models.Configuration;
 using Domain.Models.Message;
+using Serilog;
 using TL;
 
-namespace Service.Helpers
+namespace Service.Helpers.SenderStrategies
 {
-    public class TelegramSender
+    public class TelegramSender : ISender
     {
         private readonly TelegramConfiguration _telegramConfig;
 
@@ -13,13 +15,18 @@ namespace Service.Helpers
             _telegramConfig = configuration;
         }
 
-        public async Task SendAsync(TelegramMessage telegramMessage)
+        public async Task<bool> SendAsync(Domain.Models.Message.Message message)
         {
+            var telegramMessage = (TelegramMessage)message;
+            Log.Information("Sending telegram message: \n {message}", telegramMessage.Body);
             using (var client = new WTelegram.Client(ClientConnection))
             {
                 var user = await client.LoginUserIfNeeded();
                 var userToSend = await client.Contacts_ResolvePhone(_telegramConfig.Recepient_Phone);
-                await client.SendMessageAsync(userToSend, telegramMessage.Body);
+                var res = await client.SendMessageAsync(userToSend, telegramMessage.Body);
+                Log.Information("Telegram result: {res}", res);
+
+                return res != null ? true : false;
             }
         }
 

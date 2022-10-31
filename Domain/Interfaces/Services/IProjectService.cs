@@ -5,6 +5,6 @@ namespace Domain.Interfaces.Services
 {
     public interface IProjectService
     {
-        Task<List<Project>> FilterProjectsAsync(List<Project> projects, Rule rules);
+        List<Project> FilterProjects(List<Project> projects, Rule rules);
     }
 }

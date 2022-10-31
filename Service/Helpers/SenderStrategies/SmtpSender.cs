@@ -1,11 +1,13 @@
-﻿using Domain.Models.Configuration;
+﻿using Domain.Interfaces.Helpers;
+using Domain.Models.Configuration;
 using Domain.Models.Message;
 using MailKit.Net.Smtp;
 using MimeKit;
+using Serilog;
 
-namespace Service.Services
+namespace Service.Helpers.SenderStrategies
 {
-    public class SmtpSender
+    public class SmtpSender : ISender
     {
         private readonly SmtpConfiguration _smtpConfig;
 
@@ -14,8 +16,10 @@ namespace Service.Services
             _smtpConfig = configuration;
         }
 
-        public async Task SendAsync(SmtpMessage smtpMessage)
+        public async Task<bool> SendAsync(Message message)
         {
+            var smtpMessage = (SmtpMessage)message;
+            Log.Information("Sending email message: \n {subject} \n {body}", smtpMessage.Subject, smtpMessage.Body);
             var email = new MimeMessage();
 
             email.From.Add(new MailboxAddress(_smtpConfig.From.Name, _smtpConfig.From.Email));
@@ -30,9 +34,12 @@ namespace Service.Services
             {
                 await client.ConnectAsync(_smtpConfig.SmtpServer, _smtpConfig.Port, true);
                 await client.AuthenticateAsync(_smtpConfig.UserName, _smtpConfig.Password);
-                await client.SendAsync(email);
+                var res = await client.SendAsync(email);
 
                 await client.DisconnectAsync(true);
+
+                Log.Information("Smtp result: {res}", res);
+                return res != null ? true : false;
             }
         }
     }
