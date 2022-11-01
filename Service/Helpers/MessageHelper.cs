@@ -8,7 +8,7 @@ namespace Service.Helpers
         private static string ReplacePlaceholder(string text, string placeholder, string value)
         {
             var pattern = $"%{placeholder}%";
-            Log.Information("Replacing placeholder({placeholder}) in: {text}", placeholder, text);
+            Log.Debug("Replacing placeholder({placeholder}) in: {text}", placeholder, text);
             text = Regex.Replace(text, pattern, value);
             return text;
         }
@@ -47,6 +47,7 @@ namespace Service.Helpers
                 prop.SetValue(message, CreateMessageValue(templateVal, valueObj, placeholders));
             }
 
+            Log.Debug("Created mesage of type {type}", messageType);
             return message;
         }
     }

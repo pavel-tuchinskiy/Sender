@@ -20,10 +20,10 @@ namespace Service.Services
         public List<Rule> GetRules()
         {
             var rulesPath = _configuration.GetSection(Constants.RULES_PATH).Value;
-            Log.Information("Deserialization rule file({file}) started.", rulesPath);
+            Log.Debug("Deserialization rule file({file}) started.", rulesPath);
             var rules = new JsonParser().DeserializeFile<RulesRoot>(rulesPath).Rules;
 
-            Log.Information("Deserialization completed. Rules from file({rulesPath}): \n {rules}", rulesPath, JsonConvert.SerializeObject(rules));
+            Log.Debug("Deserialization completed. Rules from file({rulesPath}): \n {rules}", rulesPath, JsonConvert.SerializeObject(rules));
             return rules;
         }
     }

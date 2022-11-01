@@ -19,7 +19,7 @@ namespace Service.Helpers.SenderStrategies
         public async Task<bool> SendAsync(Message message)
         {
             var smtpMessage = (SmtpMessage)message;
-            Log.Information("Sending email message: \n {subject} \n {body}", smtpMessage.Subject, smtpMessage.Body);
+            Log.Debug("Sending email message: \n {subject} \n {body}", smtpMessage.Subject, smtpMessage.Body);
             var email = new MimeMessage();
 
             email.From.Add(new MailboxAddress(_smtpConfig.From.Name, _smtpConfig.From.Email));
@@ -38,7 +38,7 @@ namespace Service.Helpers.SenderStrategies
 
                 await client.DisconnectAsync(true);
 
-                Log.Information("Smtp result: {res}", res);
+                Log.Debug("Smtp result: {res}", res);
                 return res != null ? true : false;
             }
         }

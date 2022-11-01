@@ -13,10 +13,10 @@ namespace Service.Services
 
         public List<Project> FilterProjects(List<Project> projects, Rule rule)
         {
-            Log.Information("Filtering projects started");
+            Log.Debug("Filtering projects started");
             var filteredProjects = projects.AsQueryable().Filter(rule).ToList();
 
-            Log.Information("Filtering projects complited. Result: {projects}", JsonConvert.SerializeObject(filteredProjects));
+            Log.Debug("Filtering projects complited. Result: {projects}", JsonConvert.SerializeObject(filteredProjects));
             return filteredProjects;
         }
     }

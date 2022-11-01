@@ -28,7 +28,7 @@ namespace Service.Services.Sender
                 throw new ResponseException("Can't find required effects");
             }
 
-            Log.Information("Sending via telegram started.");
+            Log.Debug("Sending via telegram started.");
 
             var placeholders = effect.Placeholders.Select(x => x.Key).ToList();
             bool res = false;
@@ -53,7 +53,7 @@ namespace Service.Services.Sender
                 }
             }
 
-            Log.Information("Sending via telegram completed.");
+            Log.Debug("Sending via telegram completed.");
             return res;
         }
     }

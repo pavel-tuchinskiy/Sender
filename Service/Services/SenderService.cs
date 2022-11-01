@@ -22,7 +22,7 @@ namespace Service.Services
 
         public async Task<bool> SendRangeAsync<T>(List<T> objects, List<Effect> effects)
         {
-            Log.Information("Sending objects started.");
+            Log.Debug("Sending objects started.");
             var parser = new JsonParser();
             var configString = _configuration.GetSection(Constants.CHANNELS_CONFIG).Value;
             var channelsConfiguration = parser.DeserializeFile<ChannelsConfiguration>(configString);
@@ -37,7 +37,7 @@ namespace Service.Services
                 res = await channel.SendRangeAsync(objects, effect, templates);
             }
 
-            Log.Information("Sending objects completed");
+            Log.Debug("Sending objects completed");
             return res;
         }
 

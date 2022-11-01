@@ -28,7 +28,7 @@ namespace Service.Services.Sender
                 throw new ResponseException("Can't find required effect");
             }
 
-            Log.Information("Sending via smtp started.");
+            Log.Debug("Sending via smtp started.");
 
             var placeholders = effect.Placeholders.Select(x => x.Key).ToList();
             bool res = false;
@@ -54,7 +54,7 @@ namespace Service.Services.Sender
                 }
             }
 
-            Log.Information("Sending via smtp completed.");
+            Log.Debug("Sending via smtp completed.");
             return res;
         }
     }

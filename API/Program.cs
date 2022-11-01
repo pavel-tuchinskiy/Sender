@@ -5,7 +5,8 @@ using Web.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((ctx, lc) =>
 {
-    lc.WriteTo.Console();
+    lc.MinimumLevel.Debug()
+        .WriteTo.Console();
 });
 
 builder.Services.ConfigureServices();
