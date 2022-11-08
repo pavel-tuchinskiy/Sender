@@ -1,5 +1,7 @@
 ﻿using Domain.Interfaces.Services;
 using Domain.Models.Project;
+using Domain.Models.Response;
+using Domain.Models.Rules.EffectModels;
 using Domain.Models.Rules.RuleModels;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -59,6 +61,30 @@ namespace Tests.ServiceTests
 
             //Assert
             Assert.True(result);
+        }
+
+        [Fact]
+        public async Task SendRangeAsync_WhenEffectIsNull_ThrowException()
+        {
+            //Arrange
+            Mock<IConfigurationSection> mockChannels = new Mock<IConfigurationSection>();
+            mockChannels.Setup(x => x.Value).Returns("C:\\SenderProject\\senderconfig.json");
+
+            Mock<IConfigurationSection> mockTemplates = new Mock<IConfigurationSection>();
+            mockTemplates.Setup(x => x.Value).Returns("C:\\SenderProject\\templates.json");
+
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(x => x.GetSection(It.Is<string>(k => k == Service.Constants.CHANNELS_CONFIG))).Returns(mockChannels.Object);
+            mockConfiguration.Setup(x => x.GetSection(It.Is<string>(k => k == Service.Constants.TEMPLATES_PATH))).Returns(mockTemplates.Object);
+            var service = new SenderService(mockConfiguration.Object);
+            List<Effect> effects = null;
+
+            //Act
+            var ex = await Assert.ThrowsAsync<ResponseException>(() => service.SendRangeAsync(projects, effects));
+
+            //Assert
+            Assert.IsType<ResponseException>(ex);
         }
     }
 }

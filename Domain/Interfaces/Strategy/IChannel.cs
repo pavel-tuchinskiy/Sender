@@ -1,8 +1,8 @@
 ﻿using Domain.Models.Message;
 
-namespace Domain.Interfaces.Helpers
+namespace Domain.Interfaces.Strategy
 {
-    public interface ISender
+    public interface IChannel
     {
         Task<bool> SendAsync(Message message);
     }

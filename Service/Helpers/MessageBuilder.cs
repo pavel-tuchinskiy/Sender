@@ -1,9 +1,10 @@
-﻿using Serilog;
+﻿using Domain.Models.Message;
+using Serilog;
 using System.Text.RegularExpressions;
 
 namespace Service.Helpers
 {
-    public static class MessageHelper
+    public static class MessageBuilder
     {
         private static string ReplacePlaceholder(string text, string placeholder, string value)
         {
@@ -34,7 +35,7 @@ namespace Service.Helpers
             return message;
         }
 
-        public static TMessage CreateMessage<TMessage, TObject, TTemplate>(TTemplate template, TObject valueObj, List<string> placeholders)
+        public static TMessage CreateMessage<TObject, TTemplate, TMessage>(TObject valueObj, TTemplate template, List<string> placeholders)
         {
             var messageType = typeof(TMessage);
             var message = (TMessage)Activator.CreateInstance(messageType);

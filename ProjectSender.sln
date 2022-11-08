@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "API\Web.csproj", "{4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{3AEF3EA3-6784-45A2-AE49-683659E5AB60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{35069A2C-E64F-498A-90CF-AA44E6D9E4D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Service\Core.csproj", "{35069A2C-E64F-498A-90CF-AA44E6D9E4D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{11C01D56-FD7F-4306-B5C6-9A3ECFB82184}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{11C01D56-FD7F-4306-B5C6-9A3ECFB82184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,17 +1,19 @@
-﻿using Domain.Interfaces.Helpers;
+﻿using Domain.Interfaces.Strategy;
 using Domain.Models.Configuration;
 using Domain.Models.Message;
+using Domain.Models.Response;
 using MailKit.Net.Smtp;
 using MimeKit;
+using Newtonsoft.Json;
 using Serilog;
 
-namespace Service.Helpers.SenderStrategies
+namespace Service.Helpers.Services.ChannelsStrategies
 {
-    public class SmtpSender : ISender
+    public class SmtpChannelStrategy : IChannel
     {
         private readonly SmtpConfiguration _smtpConfig;
 
-        public SmtpSender(SmtpConfiguration configuration)
+        public SmtpChannelStrategy(SmtpConfiguration configuration)
         {
             _smtpConfig = configuration;
         }
@@ -34,12 +36,20 @@ namespace Service.Helpers.SenderStrategies
             {
                 await client.ConnectAsync(_smtpConfig.SmtpServer, _smtpConfig.Port, true);
                 await client.AuthenticateAsync(_smtpConfig.UserName, _smtpConfig.Password);
-                var res = await client.SendAsync(email);
+
+                try
+                {
+                    var res = await client.SendAsync(email);
+                }
+                catch (MailKit.Net.Smtp.SmtpCommandException)
+                {
+                    Log.Error("Can't send message: {message}", JsonConvert.SerializeObject(message));
+                    throw new ResponseException("Error while trying to send a message");
+                }
 
                 await client.DisconnectAsync(true);
 
-                Log.Debug("Smtp result: {res}", res);
-                return res != null ? true : false;
+                return true;
             }
         }
     }

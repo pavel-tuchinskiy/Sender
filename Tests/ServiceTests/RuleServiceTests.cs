@@ -46,7 +46,7 @@ namespace Tests.ServiceTests
         }
 
         [Fact]
-        public void GetRules_WhenCalled_ReturnsRuleList()
+        public void GetRules_WhenCalled_ReturnsCorrectRulesQuantity()
         {
             //Arrange
             Mock<IConfigurationSection> mockSection = new Mock<IConfigurationSection>();
@@ -60,6 +60,21 @@ namespace Tests.ServiceTests
             //Assert
             Assert.Equal(3, result[0].Conditions.Count);
             Assert.Equal(2, result[0].Effects.Count);
+        }
+
+        [Fact]
+        public void GetRules_WhenCalled_ReturnsRulesData()
+        {
+            //Arrange
+            Mock<IConfigurationSection> mockSection = new Mock<IConfigurationSection>();
+            mockSection.Setup(x => x.Value).Returns("C:\\SenderProject\\rules.json");
+            _mockConfiguration.Setup(x => x.GetSection(It.Is<string>(k => k == Service.Constants.RULES_PATH))).Returns(mockSection.Object);
+            var service = new RuleService(_mockConfiguration.Object);
+
+            //Act
+            var result = service.GetRules();
+
+            //Assert
             Assert.Equal(rules[0].Operator, result[0].Operator);
             Assert.Equivalent(rules[0].Conditions[0], result[0].Conditions[0]);
             Assert.Equivalent(rules[0].Effects[0], result[0].Effects[0]);
