@@ -2,6 +2,7 @@
 using Domain.Models.Configuration;
 using Domain.Models.Message;
 using Domain.Models.Response;
+using Domain.Models.Rules.EffectModels;
 using Newtonsoft.Json;
 using Serilog;
 using TL;
@@ -11,10 +12,11 @@ namespace Service.Helpers.Services.ChannelsStrategies
     public class TelegramChannelStrategy : IChannel
     {
         private readonly TelegramConfiguration _telegramConfig;
+        public readonly ChannelType _channelType = ChannelType.Telegram;
 
-        public TelegramChannelStrategy(TelegramConfiguration configuration)
+        public TelegramChannelStrategy(ChannelsConfiguration configuration)
         {
-            _telegramConfig = configuration;
+            _telegramConfig = configuration.TelegramConfiguration;
         }
 
         public async Task<bool> SendAsync(Domain.Models.Message.Message message)

@@ -17,7 +17,7 @@ namespace Tests.ChannelsTests
         {
             //Arrange
             var channelConfig = new JsonParser().DeserializeFile<ChannelsConfiguration>("C:\\SenderProject\\senderconfig.json");
-            var telegramConfiguration = channelConfig.TelegramConfiguration;
+            var telegramConfiguration = channelConfig;
             var message = new TelegramMessage
             {
                 Body = "Test"
@@ -36,7 +36,7 @@ namespace Tests.ChannelsTests
         {
             //Arrange
             var channelConfig = new JsonParser().DeserializeFile<ChannelsConfiguration>("C:\\SenderProject\\senderconfig.json");
-            var telegramConfiguration = channelConfig.TelegramConfiguration;
+            var telegramConfiguration = channelConfig;
             TelegramMessage message = new TelegramMessage();
             var service = new TelegramChannelStrategy(telegramConfiguration);
 

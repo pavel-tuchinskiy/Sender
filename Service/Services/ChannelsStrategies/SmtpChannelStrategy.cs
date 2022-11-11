@@ -2,6 +2,7 @@
 using Domain.Models.Configuration;
 using Domain.Models.Message;
 using Domain.Models.Response;
+using Domain.Models.Rules.EffectModels;
 using MailKit.Net.Smtp;
 using MimeKit;
 using Newtonsoft.Json;
@@ -12,10 +13,11 @@ namespace Service.Helpers.Services.ChannelsStrategies
     public class SmtpChannelStrategy : IChannel
     {
         private readonly SmtpConfiguration _smtpConfig;
+        public readonly ChannelType _channelType = ChannelType.SMTP;
 
-        public SmtpChannelStrategy(SmtpConfiguration configuration)
+        public SmtpChannelStrategy(ChannelsConfiguration configuration)
         {
-            _smtpConfig = configuration;
+            _smtpConfig = configuration.SmtpConfiguration;
         }
 
         public async Task<bool> SendAsync(Message message)

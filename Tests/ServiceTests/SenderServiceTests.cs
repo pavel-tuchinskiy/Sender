@@ -1,11 +1,9 @@
-﻿using Domain.Interfaces.Services;
-using Domain.Models.Project;
+﻿using Domain.Models.Project;
 using Domain.Models.Response;
 using Domain.Models.Rules.EffectModels;
 using Domain.Models.Rules.RuleModels;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Service.Helpers;
 using Service.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;

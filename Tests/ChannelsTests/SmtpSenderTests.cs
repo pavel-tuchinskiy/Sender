@@ -17,7 +17,7 @@ namespace Tests.ChannelsTests
         {
             //Arrange
             var channelConfig = new JsonParser().DeserializeFile<ChannelsConfiguration>("C:\\SenderProject\\senderconfig.json");
-            var smtpConfiguration = channelConfig.SmtpConfiguration;
+            var smtpConfiguration = channelConfig;
             var message = new SmtpMessage
             {
                 Body = "Test",
@@ -37,8 +37,8 @@ namespace Tests.ChannelsTests
         {
             //Arrange
             var channelConfig = new JsonParser().DeserializeFile<ChannelsConfiguration>("C:\\SenderProject\\senderconfig.json");
-            var smtpConfiguration = channelConfig.SmtpConfiguration;
-            smtpConfiguration.To = "dadadadsa";
+            var smtpConfiguration = channelConfig;
+            smtpConfiguration.SmtpConfiguration.To = "dadadadsa";
             var message = new SmtpMessage
             {
                 Subject = "Test",

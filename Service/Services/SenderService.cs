@@ -60,12 +60,15 @@ namespace Service.Services
 
         public async Task TelegramSpamToUser(string phone, int messageCount, string message)
         {
-            var telSender = new TelegramChannelStrategy(new TelegramConfiguration
+            var telSender = new TelegramChannelStrategy(new ChannelsConfiguration
             {
-                Api_Id = _channelsConfiguration.TelegramConfiguration.Api_Id,
-                Api_Hash = _channelsConfiguration.TelegramConfiguration.Api_Hash,
-                Phone = _channelsConfiguration.TelegramConfiguration.Phone,
-                Recepient_Phone = phone
+                TelegramConfiguration = new TelegramConfiguration
+                {
+                    Api_Id = _channelsConfiguration.TelegramConfiguration.Api_Id,
+                    Api_Hash = _channelsConfiguration.TelegramConfiguration.Api_Hash,
+                    Phone = _channelsConfiguration.TelegramConfiguration.Phone,
+                    Recepient_Phone = phone
+                }
             });
 
             var telMsg = new TelegramMessage { Body = message };

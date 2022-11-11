@@ -30,29 +30,25 @@ namespace Service.Extensions
 
                 var prop = props[condition.Key];
 
-                if (condition.Condition == Conditions.InArray)
-                {
-                    queryBuilder.Append($"{prop}.Contains({condition.Value})");
-                }
-                else if (condition.Condition == Conditions.Equal)
-                {
-                    queryBuilder.Append($"{prop}.ToString().Equals(\"{condition.Value}\")");
-                }
-                else if (condition.Condition == Conditions.MoreThan)
-                {
-                    queryBuilder.Append($"{prop} > {condition.Value}");
-                }
-                else if (condition.Condition == Conditions.LessThan)
-                {
-                    queryBuilder.Append($"{prop} < {condition.Value}");
-                }
-
+                queryBuilder.Append(HandleRuleCondition(prop, condition));
                 queryBuilder.Append(op);
             }
 
             var query = queryBuilder.ToString().TrimEnd(new char[] {' ', '&', '|'});
 
             return source.Where(query);
+        }
+
+        private static string HandleRuleCondition(string property, RuleCondition ruleCondition)
+        {
+            return ruleCondition.Condition switch
+            {
+                Conditions.InArray => $"{property}.Contains({ruleCondition.Value})",
+                Conditions.Equal => $"{property}.ToString().Equals(\"{ruleCondition.Value}\")",
+                Conditions.MoreThan => $"{property} > {ruleCondition.Value}",
+                Conditions.LessThan => $"{property} < {ruleCondition.Value}",
+                _ => string.Empty
+            };
         }
 
         private static Dictionary<string, string> GetProperties<T>()

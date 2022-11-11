@@ -36,9 +36,10 @@ namespace Service.Helpers
         }
 
         public static TMessage CreateMessage<TObject, TTemplate, TMessage>(TObject valueObj, TTemplate template, List<string> placeholders)
+            where TMessage : new()
         {
             var messageType = typeof(TMessage);
-            var message = (TMessage)Activator.CreateInstance(messageType);
+            var message = new TMessage();
             var messageProps = messageType.GetProperties();
             var templateProps = typeof(TTemplate).GetProperties();
             
