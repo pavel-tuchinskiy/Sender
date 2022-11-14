@@ -12,7 +12,7 @@ namespace Web.Extensions
             {
                 if (continuation == null)
                 {
-                    return new OkObjectResult(s);
+                    return new OkObjectResult(new HttpResponseResult(200, s));
                 }
 
                 var continueResult = continuation(s).GetAwaiter().GetResult();
@@ -20,15 +20,21 @@ namespace Web.Extensions
                 return ToOk<TContinue, TContinue>(continueResult);
             }, f =>
             {
-                if(f is ResponseException exception)
+                var exResult = f switch
                 {
-                    return new ObjectResult(exception.Message)
+                    ResponseException => new HttpResponseResult
                     {
-                        StatusCode = 400
-                    };
-                }
+                        StatusCode = StatusCodes.Status400BadRequest,
+                        Exception = new ResponseExceptionDTO(((ResponseException)f).Message)
+                    },
+                    _ => new HttpResponseResult
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError,
+                        Exception = new ResponseExceptionDTO(f.Message)
+                    }
+                };
 
-                return new StatusCodeResult(500);
+                return new ObjectResult(exResult);
             });
 
             return res;

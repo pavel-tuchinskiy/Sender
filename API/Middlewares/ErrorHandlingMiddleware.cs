@@ -33,7 +33,7 @@ namespace Web.Middlewares
             };
 
             var exceptionDTO = new ResponseExceptionDTO(exception.Message);
-            await httpContext.Response.WriteAsJsonAsync(new HttpResponseResult<Exception>(httpContext.Response.StatusCode, exception: exceptionDTO));
+            await httpContext.Response.WriteAsJsonAsync(new HttpResponseResult(httpContext.Response.StatusCode, exception: exceptionDTO));
         }
     }
 }
