@@ -13,7 +13,6 @@ namespace Service.Services
     {
         public Result<List<Project>> FilterProjects(List<Project> projects, Rule rule)
         {
-            projects = null;
             if(projects == null)
             {
                 Log.Error("Projects is null");

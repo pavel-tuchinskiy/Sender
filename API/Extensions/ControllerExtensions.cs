@@ -22,10 +22,10 @@ namespace Web.Extensions
             {
                 var exResult = f switch
                 {
-                    ResponseException => new HttpResponseResult
+                    ResponseException ex => new HttpResponseResult
                     {
                         StatusCode = StatusCodes.Status400BadRequest,
-                        Exception = new ResponseExceptionDTO(((ResponseException)f).Message)
+                        Exception = new ResponseExceptionDTO(ex.Message)
                     },
                     _ => new HttpResponseResult
                     {
