@@ -6,7 +6,7 @@ namespace Web.Extensions
 {
     public static class ControllerExtensions
     {
-        public static IActionResult ToOk<TResult, TContinue>(Result<TResult> result, Func<TResult, Task<Result<TContinue>>> continuation = null)
+        public static IActionResult ToOk<TResult, TContinue>(this Result<TResult> result, Func<TResult, Task<Result<TContinue>>> continuation = null)
         {
             var res = result.Match(s =>
             {

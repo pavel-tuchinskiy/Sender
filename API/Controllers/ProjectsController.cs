@@ -35,7 +35,7 @@ namespace API.Controllers
             foreach(var rule in _rules)
             {
                 var filteredProjects = _projectService.FilterProjects(projects.Projects, rule);
-                res = ControllerExtensions.ToOk(filteredProjects, (filteredProjects) => 
+                res = filteredProjects.ToOk((filteredProjects) => 
                     _senderService.SendRangeAsync(filteredProjects, rule.Effects, _templates));
             } 
 
@@ -46,7 +46,7 @@ namespace API.Controllers
         public async Task<IActionResult> TelegramSpam(string phone, int messageCount, string message)
         {
             var res = await _senderService.TelegramSpamToUser(phone, messageCount, message);
-            return ControllerExtensions.ToOk<bool, bool>(res);
+            return res.ToOk<bool, bool>();
         }
     }
 }
