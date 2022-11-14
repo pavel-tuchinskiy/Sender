@@ -45,7 +45,7 @@ namespace Tests.ServiceTests
         }
 
         [Fact]
-        public async Task SendRangeAsync_WhenCalled_SendObjectListViaChannels()
+        public async Task SendRangeAsync_WhenCalled_RetunSuccessResult()
         {
             //Arrange
             var service = new SenderService(configMock.Object);
@@ -54,21 +54,21 @@ namespace Tests.ServiceTests
             var result = await service.SendRangeAsync(projects, rules[0].Effects, templates);
 
             //Assert
-            Assert.True(result);
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
-        public async Task SendRangeAsync_WhenEffectIsNull_ThrowException()
+        public async Task SendRangeAsync_WhenEffectIsNull_RestunFailedResult()
         {
             //Arrange
             var service = new SenderService(configMock.Object);
             List<Effect> effects = null;
 
             //Act
-            var ex = await Assert.ThrowsAsync<ResponseException>(() => service.SendRangeAsync(projects, effects, templates));
+            var result = await service.SendRangeAsync(projects, effects, templates);
 
             //Assert
-            Assert.IsType<ResponseException>(ex);
+            Assert.False(result.IsSuccess);
         }
     }
 }

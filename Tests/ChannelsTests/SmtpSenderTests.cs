@@ -13,7 +13,7 @@ namespace Tests.ChannelsTests
         public SmtpSenderTests(){}
 
         [Fact]
-        public async Task SendAsync_WhenReciveValidMessage_SendEmail()
+        public async Task SendAsync_WhenReciveValidMessage_ReturnSuccessResult()
         {
             //Arrange
             var channelConfig = new JsonParser().DeserializeFile<ChannelsConfiguration>("C:\\SenderProject\\senderconfig.json");
@@ -29,11 +29,11 @@ namespace Tests.ChannelsTests
             var result = await service.SendAsync(message);
 
             //Assert
-            Assert.True(result);
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
-        public async Task SendAsync_WhenReciveInvalidMessage_ThrowsException()
+        public async Task SendAsync_WhenReciveInvalidMessage_RetunFailedResult()
         {
             //Arrange
             var channelConfig = new JsonParser().DeserializeFile<ChannelsConfiguration>("C:\\SenderProject\\senderconfig.json");
@@ -47,10 +47,10 @@ namespace Tests.ChannelsTests
             var service = new SmtpChannelStrategy(smtpConfiguration);
 
             //Act
-            var ex = await Assert.ThrowsAsync<ResponseException>(() => service.SendAsync(message));
+            var result = await service.SendAsync(message);
 
             //Assert
-            Assert.IsType<ResponseException>(ex);
+            Assert.False(result.IsSuccess);
         }
     }
 }

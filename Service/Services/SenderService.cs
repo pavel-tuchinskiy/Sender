@@ -4,6 +4,7 @@ using Domain.Models.Message;
 using Domain.Models.MessageTemplates;
 using Domain.Models.Response;
 using Domain.Models.Rules.EffectModels;
+using LanguageExt.Common;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Service.Helpers.Services.ChannelsStrategies;
@@ -24,17 +25,18 @@ namespace Service.Services
             _channelResolver = new ChannelStrategyResolver(_channelsConfiguration);
         }
 
-        public async Task<bool> SendRangeAsync<T>(List<T> objects, List<Effect> effects, Templates templates)
+        public async Task<Result<bool>> SendRangeAsync<T>(List<T> objects, List<Effect> effects, Templates templates)
         {
             if (effects == null)
             {
                 Log.Error("Effects is null");
-                throw new ResponseException("Effects is null");
+                var ex = new ResponseException("Effects is null");
+                return new Result<bool>(ex);
             }
 
             Log.Debug("Sending objects started.");
 
-            bool res = false;
+            Result<bool> res = false;
             foreach(var effect in effects)
             {
                 var messageFactory = _messageResolver.GetMessageStrategy(effect, templates);
@@ -52,7 +54,7 @@ namespace Service.Services
             return res;
         }
 
-        public async Task TelegramSpamToUser(string phone, int messageCount, string message)
+        public async Task<Result<bool>> TelegramSpamToUser(string phone, int messageCount, string message)
         {
             var telSender = new TelegramChannelStrategy(new ChannelsConfiguration
             {
@@ -66,7 +68,8 @@ namespace Service.Services
             });
 
             var telMsg = new TelegramMessage { Body = message };
-            await telSender.SendManyAsync(telMsg, messageCount);
+            var res = await telSender.SendManyAsync(telMsg, messageCount);
+            return res;
         }
     }
 }

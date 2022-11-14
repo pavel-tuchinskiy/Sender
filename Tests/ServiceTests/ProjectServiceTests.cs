@@ -43,7 +43,7 @@ namespace Tests.ServiceTests
         }
 
         [Fact]
-        public void FilterProjects_WhenCalled_RerunsFilteredProjectList()
+        public void FilterProjects_WhenCalled_RerunsSuccessResult()
         {
             //Arrange
             var service = new ProjectService();
@@ -52,22 +52,21 @@ namespace Tests.ServiceTests
             var result = service.FilterProjects(projects, rules[0]);
 
             //Assert
-            Assert.Single(result);
-            Assert.Equal(projects[1], result[0]);
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
-        public void FilterProjects_IfProjectsIsNull_ThrowException()
+        public void FilterProjects_IfProjectsIsNull_ReturnFailedResult()
         {
             //Arrange
             var service = new ProjectService();
             List<Project> projects = null;
 
             //Act
-            var ex = Assert.Throws<ResponseException>(() => service.FilterProjects(projects, rules[0]));
+            var result = service.FilterProjects(projects, rules[0]);
 
             //Assert
-            Assert.IsType<ResponseException>(ex);
+            Assert.False(result.IsSuccess);
         }
     }
 }

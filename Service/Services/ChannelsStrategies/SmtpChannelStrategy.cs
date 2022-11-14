@@ -3,6 +3,7 @@ using Domain.Models.Configuration;
 using Domain.Models.Message;
 using Domain.Models.Response;
 using Domain.Models.Rules.EffectModels;
+using LanguageExt.Common;
 using MailKit.Net.Smtp;
 using MimeKit;
 using Newtonsoft.Json;
@@ -20,7 +21,7 @@ namespace Service.Helpers.Services.ChannelsStrategies
             _smtpConfig = configuration.SmtpConfiguration;
         }
 
-        public async Task<bool> SendAsync(Message message)
+        public async Task<Result<bool>> SendAsync(Message message)
         {
             var smtpMessage = (SmtpMessage)message;
             Log.Debug("Sending email message: \n {subject} \n {body}", smtpMessage.Subject, smtpMessage.Body);
@@ -46,7 +47,8 @@ namespace Service.Helpers.Services.ChannelsStrategies
                 catch (MailKit.Net.Smtp.SmtpCommandException)
                 {
                     Log.Error("Can't send message: {message}", JsonConvert.SerializeObject(message));
-                    throw new ResponseException("Error while trying to send a message");
+                    var ex = new ResponseException("Error while trying to send a message");
+                    return new Result<bool>(ex);
                 }
 
                 await client.DisconnectAsync(true);

@@ -3,6 +3,7 @@ using Domain.Models.Configuration;
 using Domain.Models.Message;
 using Domain.Models.Response;
 using Domain.Models.Rules.EffectModels;
+using LanguageExt.Common;
 using Newtonsoft.Json;
 using Serilog;
 using TL;
@@ -20,7 +21,7 @@ namespace Service.Helpers.Services.ChannelsStrategies
             _telegramConfig = configuration.TelegramConfiguration;
         }
 
-        public async Task<bool> SendAsync(Message message)
+        public async Task<Result<bool>> SendAsync(Message message)
         {
             var telegramMessage = (TelegramMessage)message;
             Log.Debug("Sending telegram message: \n {message}", telegramMessage.Body);
@@ -35,14 +36,15 @@ namespace Service.Helpers.Services.ChannelsStrategies
                 catch (TL.RpcException)
                 {
                     Log.Error("Can't send message: {message}", JsonConvert.SerializeObject(message));
-                    throw new ResponseException("Error while trying to send a message");
+                    var ex = new ResponseException("Error while trying to send a message");
+                    return new Result<bool>(ex);
                 }
 
                 return true;
             }
         }
 
-        public async Task SendManyAsync(TelegramMessage telegramMessage, int messageCount)
+        public async Task<Result<bool>> SendManyAsync(TelegramMessage telegramMessage, int messageCount)
         {
             using (var client = new WTelegram.Client(ClientConnection))
             {
@@ -57,6 +59,8 @@ namespace Service.Helpers.Services.ChannelsStrategies
                     Task.Delay(msec).Wait();
                 }
             }
+
+            return new Result<bool>(true);
         }
 
         private string ClientConnection(string required)

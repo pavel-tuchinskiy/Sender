@@ -1,10 +1,11 @@
 ﻿using Domain.Models.Project;
 using Domain.Models.Rules.RuleModels;
+using LanguageExt.Common;
 
 namespace Domain.Interfaces.Services
 {
     public interface IProjectService
     {
-        List<Project> FilterProjects(List<Project> projects, Rule rules);
+        Result<List<Project>> FilterProjects(List<Project> projects, Rule rules);
     }
 }

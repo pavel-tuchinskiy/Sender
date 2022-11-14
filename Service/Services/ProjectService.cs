@@ -2,6 +2,7 @@
 using Domain.Models.Project;
 using Domain.Models.Response;
 using Domain.Models.Rules.RuleModels;
+using LanguageExt.Common;
 using Newtonsoft.Json;
 using Serilog;
 using Service.Extensions;
@@ -10,12 +11,13 @@ namespace Service.Services
 {
     public class ProjectService : IProjectService
     {
-        public List<Project> FilterProjects(List<Project> projects, Rule rule)
+        public Result<List<Project>> FilterProjects(List<Project> projects, Rule rule)
         {
             if(projects == null)
             {
                 Log.Error("Projects is null");
-                throw new ResponseException("Projects is null");
+                var ex = new ResponseException("Projects is null");
+                return new Result<List<Project>>(ex);
             }
 
             Log.Debug("Filtering projects started");

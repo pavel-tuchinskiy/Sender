@@ -1,9 +1,10 @@
 ﻿using Domain.Models.Message;
+using LanguageExt.Common;
 
 namespace Domain.Interfaces.Strategy
 {
     public interface IChannel
     {
-        Task<bool> SendAsync(Message message);
+        Task<Result<bool>> SendAsync(Message message);
     }
 }

@@ -1,11 +1,11 @@
 ﻿using Domain.Interfaces.Services;
 using Domain.Models.MessageTemplates;
 using Domain.Models.Project;
-using Domain.Models.Response;
 using Domain.Models.Rules;
 using Domain.Models.Rules.RuleModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Web.Extensions;
 
 namespace API.Controllers
 {
@@ -28,23 +28,25 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<HttpResponseResult<Project>> Post(ProjectsRoot projects)
+        public IActionResult Post(ProjectsRoot projects)
         {
+            IActionResult res = null;
+
             foreach(var rule in _rules)
             {
                 var filteredProjects = _projectService.FilterProjects(projects.Projects, rule);
-                await _senderService.SendRangeAsync(filteredProjects, rule.Effects, _templates);
+                res = ControllerExtensions.ToOk(filteredProjects, (filteredProjects) => 
+                    _senderService.SendRangeAsync(filteredProjects, rule.Effects, _templates));
             } 
 
-            return new HttpResponseResult<Project>(200);
+            return res;
         }
 
         [HttpPost("TelegramSpam")]
-        public async Task<HttpResponseResult<Project>> TelegramSpam(string phone, int messageCount, string message)
+        public async Task<IActionResult> TelegramSpam(string phone, int messageCount, string message)
         {
-            await _senderService.TelegramSpamToUser(phone, messageCount, message);
-
-            return new HttpResponseResult<Project>(200);
+            var res = await _senderService.TelegramSpamToUser(phone, messageCount, message);
+            return ControllerExtensions.ToOk<bool, bool>(res);
         }
     }
 }
