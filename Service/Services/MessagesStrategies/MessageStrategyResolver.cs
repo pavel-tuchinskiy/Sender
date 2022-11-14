@@ -1,30 +1,41 @@
-﻿using Domain.Interfaces.Strategy;
+﻿using Core.Helpers;
+using Domain.Attributes;
+using Domain.Interfaces.Strategy;
 using Domain.Models.MessageTemplates;
 using Domain.Models.Rules.EffectModels;
 using System.Linq.Dynamic.Core;
+using System.Reflection;
 
 namespace Service.Helpers.Services.MessagesStrategies
 {
     public class MessageStrategyResolver
     {
-        public IMessage GetMessageFactory(Effect effect, Templates templates)
+        public IMessage GetMessageStrategy(Effect effect, Templates templates)
         {
             var placeholders = effect.Placeholders.Select(x => x.Key).ToList();
 
-            IMessage messageFactory = null;
+            var template = GetTemplate(templates, effect.Type, effect.Template_id);
+            var messageStrategies = StrategiesHelper.GetStrategies<ChannelType, IMessage>(typeof(MessageStrategyResolver), template, placeholders);
 
-            if (effect.Type == ChannelType.SMTP)
-            {
-                var template = templates.SmtpTemplates.FirstOrDefault(x => x.Id == effect.TemplateId);
-                messageFactory = new SmtpMessageStrategy(template, placeholders);
-            }
-            else if (effect.Type == ChannelType.Telegram)
-            {
-                var template = templates.TelegramTemplates.FirstOrDefault(x => x.Id == effect.TemplateId);
-                messageFactory = new TelegramMessageStrategy(template, placeholders);
-            }
+            return messageStrategies[effect.Type];
+        }
 
-            return messageFactory;
+        private TemplateBase GetTemplate(Templates templates, ChannelType channelType, int templateId)
+        {
+            var props = typeof(Templates).GetProperties();
+            foreach(var prop in props)
+            {
+                var type = prop.GetCustomAttribute<ChannelTypeAttribute>()!.ChannelType;
+                
+                if(type == channelType)
+                {
+                    var templatesList = (IEnumerable<TemplateBase>)prop.GetValue(templates);
+
+                    var template = templatesList.FirstOrDefault(x => x.Id == templateId);
+                    return template;
+                }
+            }
+            return null;
         }
     }
 }

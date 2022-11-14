@@ -6,6 +6,7 @@ using Domain.Models.Rules.EffectModels;
 using Newtonsoft.Json;
 using Serilog;
 using TL;
+using Message = Domain.Models.Message.Message;
 
 namespace Service.Helpers.Services.ChannelsStrategies
 {
@@ -19,7 +20,7 @@ namespace Service.Helpers.Services.ChannelsStrategies
             _telegramConfig = configuration.TelegramConfiguration;
         }
 
-        public async Task<bool> SendAsync(Domain.Models.Message.Message message)
+        public async Task<bool> SendAsync(Message message)
         {
             var telegramMessage = (TelegramMessage)message;
             Log.Debug("Sending telegram message: \n {message}", telegramMessage.Body);

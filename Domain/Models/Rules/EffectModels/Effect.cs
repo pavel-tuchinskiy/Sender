@@ -9,7 +9,7 @@ namespace Domain.Models.Rules.EffectModels
         [JsonConverter(typeof(StringEnumConverter))]
         public ChannelType Type { get; set; }
         [JsonProperty("template_id")]
-        public int TemplateId { get; set; }
+        public int Template_id { get; set; }
         public ExpandoObject Placeholders { get; set; }
     }
 }

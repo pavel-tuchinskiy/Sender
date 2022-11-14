@@ -1,12 +1,12 @@
 ﻿namespace Domain.Models.Response
 {
-    public class HttpResponseResult
+    public class HttpResponseResult<T> where T : class
     {
         public int StatusCode { get; set; }
-        public dynamic Data { get; set; }
+        public T Data { get; set; }
         public ResponseExceptionDTO Exception { get; set; }
 
-        public HttpResponseResult(int statusCode, dynamic data = null, ResponseExceptionDTO exception = null)
+        public HttpResponseResult(int statusCode, T data = null, ResponseExceptionDTO exception = null)
         {
             StatusCode = statusCode;
             Data = data;

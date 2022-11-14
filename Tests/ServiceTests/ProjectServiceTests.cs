@@ -1,7 +1,8 @@
 ﻿using Domain.Models.Project;
+using Domain.Models.Response;
+using Domain.Models.Rules;
 using Domain.Models.Rules.RuleModels;
-using Microsoft.Extensions.Configuration;
-using Moq;
+using Service.Helpers;
 using Service.Services;
 using System.Collections.Generic;
 using Xunit;
@@ -37,12 +38,8 @@ namespace Tests.ServiceTests
                     Modified_At = (long)1549459564
                 }
             };
-            Mock<IConfigurationSection> mockSection = new Mock<IConfigurationSection>();
-            mockSection.Setup(x => x.Value).Returns("C:\\SenderProject\\rules.json");
-            var mockConfiguration = new Mock<IConfiguration>();
-            mockConfiguration.Setup(x => x.GetSection(It.Is<string>(k => k == Service.Constants.RULES_PATH))).Returns(mockSection.Object);
-            var ruleService = new RuleService(mockConfiguration.Object);
-            rules = ruleService.GetRules();
+            var jParser = new JsonParser();
+            rules = jParser.DeserializeFile<RulesRoot>("C:\\SenderProject\\rules.json").Rules;
         }
 
         [Fact]
@@ -57,6 +54,20 @@ namespace Tests.ServiceTests
             //Assert
             Assert.Single(result);
             Assert.Equal(projects[1], result[0]);
+        }
+
+        [Fact]
+        public void FilterProjects_IfProjectsIsNull_ThrowException()
+        {
+            //Arrange
+            var service = new ProjectService();
+            List<Project> projects = null;
+
+            //Act
+            var ex = Assert.Throws<ResponseException>(() => service.FilterProjects(projects, rules[0]));
+
+            //Assert
+            Assert.IsType<ResponseException>(ex);
         }
     }
 }

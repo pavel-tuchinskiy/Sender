@@ -7,10 +7,8 @@ namespace Domain.Models.Rules.RuleModels
     {
         public string Key { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
         public Conditions Condition { get; set; }
 
-        [JsonProperty("val")]
-        public object Value { get; set; }
+        public object Val { get; set; }
     }
 }

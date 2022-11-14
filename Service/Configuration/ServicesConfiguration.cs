@@ -8,7 +8,6 @@ namespace Service.Configuration
     {
         public static void ConfigureServices(this IServiceCollection services)
         {
-            services.AddScoped<IRuleService, RuleService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ISenderService, SenderService>();
         }

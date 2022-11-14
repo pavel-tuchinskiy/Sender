@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Domain.Interfaces.Options;
+using Newtonsoft.Json;
 
 namespace Domain.Models.Configuration
 {
-    public class ChannelsConfiguration
+    public class ChannelsConfiguration : ISenderOptions
     {
         [JsonProperty("SmtpConfiguration")]
         public SmtpConfiguration SmtpConfiguration { get; set; }

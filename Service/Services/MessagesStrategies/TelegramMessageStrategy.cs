@@ -1,15 +1,17 @@
 ﻿using Domain.Interfaces.Strategy;
 using Domain.Models.Message;
 using Domain.Models.MessageTemplates;
+using Domain.Models.Rules.EffectModels;
 
 namespace Service.Helpers.Services.MessagesStrategies
 {
     public class TelegramMessageStrategy : IMessage
     {
-        private readonly TelegramTemplate _template;
+        private readonly TemplateBase _template;
         private readonly List<string> _placeholders;
+        public readonly ChannelType _channelType = ChannelType.Telegram;
 
-        public TelegramMessageStrategy(TelegramTemplate template, List<string> placeholders)
+        public TelegramMessageStrategy(TemplateBase template, List<string> placeholders)
         {
             _template = template;
             _placeholders = placeholders;
@@ -21,7 +23,7 @@ namespace Service.Helpers.Services.MessagesStrategies
 
             foreach (var item in items)
             {
-                messages.Add(MessageBuilder.CreateMessage<T, TelegramTemplate, TelegramMessage>(item, _template, _placeholders));
+                messages.Add(MessageBuilder.CreateMessage<T, TelegramTemplate, TelegramMessage>(item, (TelegramTemplate)_template, _placeholders));
             }
 
             return messages;

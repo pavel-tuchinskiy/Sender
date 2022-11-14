@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Service.Extensions
 {
-    public static class ServiceExtensions
+    public static class ProjectQueriableExtensions
     {
         public static IQueryable<T> Filter<T>(this IQueryable<T> source, Rule rule)
         {
@@ -43,10 +43,10 @@ namespace Service.Extensions
         {
             return ruleCondition.Condition switch
             {
-                Conditions.InArray => $"{property}.Contains({ruleCondition.Value})",
-                Conditions.Equal => $"{property}.ToString().Equals(\"{ruleCondition.Value}\")",
-                Conditions.MoreThan => $"{property} > {ruleCondition.Value}",
-                Conditions.LessThan => $"{property} < {ruleCondition.Value}",
+                Conditions.InArray => $"{property}.Contains({ruleCondition.Val})",
+                Conditions.Equal => $"{property}.ToString().Equals(\"{ruleCondition.Val}\")",
+                Conditions.MoreThan => $"{property} > {ruleCondition.Val}",
+                Conditions.LessThan => $"{property} < {ruleCondition.Val}",
                 _ => string.Empty
             };
         }
